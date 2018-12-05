@@ -36,29 +36,74 @@ class LinkedIn {
         #$cleanToken = str_replace($dirt, '', $token);       #  $cleanToken = str_replace("﻿﻿\r", '', $cleanToken);
         return $cleanToken;
     }
-     function TxtGetFirstName ($tokenArray){
-        //foreach ($tokenArray as $key => $value) {
-            
-        //}
-        return $tokenArray[0];
+    function TxtGetFirstName ($tokenArray){
+        foreach ($tokenArray as $key => $row) {
+            $words = explode(' ', $row);
+            #echo $this->TxtGetLinkedInLink($tokenArray).' '.
+           if ((strpos($this->TxtGetLinkedInLink($tokenArray),$row) !== FALSE ||  strpos($this->TxtGetLinkedInLink($tokenArray),$words[0]) !== FALSE ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
+               if (count($words)>1) {
+                   return $words[0] ;
+               }
+               else {
+                    return $row;
+               }
+              
+           }
+           else {
+                
+                 #if (strpos($this->TxtGetLinkedInLink($tokenArray),$words[0]) !== FALSE && strpos($row,'TOP') === FALSE  && strpos($row,'LINKED') === FALSE  ){
+                   #   return $row;
+               #  }
+           }
+        }
+        
+    }
+    function TxtGetLastName ($tokenArray){
+        foreach ($tokenArray as $key => $row) {
+            $words = explode(' ', $row);
+             if (count($words)>1) {
+                 
+                  if ( strpos($this->TxtGetLinkedInLink($tokenArray),$words[1]) !== FALSE  && strlen($words[1] > 3)){
+                      # if (strlen($words[1] > 3)){
+                            return $words[1] ;
+                       #}
+                  
+               
+             
+             }
+             else {
+                 print_r($words[1]);
+             }
+            #echo $this->TxtGetLinkedInLink($tokenArray).' '.
+          
+              
+           }
+           else {
+                
+                  if ((strpos($this->TxtGetLinkedInLink($tokenArray),$row) !== FALSE  ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
+                      return $tokenArray[$key + 1];
+                  }
+           }
+        }
+        
     }
     function TxtGetLinkedInLink($tokenArray){
         $result ='';      
         $resultArray=[];
-        $keywords_af =['﻿(LinkedIn)'];
-        $keywords_bf =['﻿﻿Contact'];
+        $keywords_af =['﻿(LINKEDIN)'];
+        $keywords_bf =['﻿﻿CONTACT'];
         
         foreach ($tokenArray as $key => $row) {
              #if ($tokenArray[$key]==  $keywords_af[0]) {
              if ($this->stringCompare($keywords_af[0], $tokenArray[$key])> 80)  { 
-                 echo 'found'.$tokenArray[$key].PHP_EOL;
+                 #echo 'found'.$tokenArray[$key].PHP_EOL;
                  $index = $key - 1;
               #   while ( strpos($tokenArray[$index],  $keywords_bf[0]) === 'false' )  {   
                   while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80 && $this->isEmail($tokenArray[$index]) === FALSE )  {               
 #while ($this->isEmail($tokenArray[$key])===FALSE ||( strpos($tokenArray[$index],  $keywords_bf[0]) ===FALSE ) ) {
                      
                       $resultArray []= $tokenArray[$index];
-                      echo 'index='. $index;
+                      #echo 'index='. $index;
                       $index-- ;
                  }
                  #$result = str_replace('www.linkedin.com/in/','',$result );
@@ -69,7 +114,7 @@ class LinkedIn {
              }
             #$result = str_replace('www.linkedin.com/in/','',$tokenArray[1].$tokenArray[2]);
         }
-        return $result;
+       # return $result;
         
     }
     function TxtGetEmail($tokenArray){
@@ -109,7 +154,7 @@ class LinkedIn {
                   if(!mb_detect_encoding($row[0] , 'utf-8', true)){
                     $row[0]  = utf8_encode($row[0]);
                   }
-                  $tokenArray[]=$row[0];
+                  $tokenArray[]=  mb_strtoupper($row[0],'utf-8');
              }
          }
          return $tokenArray;

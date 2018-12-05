@@ -29,9 +29,13 @@ foreach ($files as $indexFile => $file) {
      #print_r($txtFull);
      $profile[$indexFile]['index'] = $indexFile ; 
      $profile[$indexFile]['fileName'] = $file ; 
-     $profile[$indexFile]['firstName'] = ''; 
-     $profile[$indexFile]['lastName'] = ''; 
+    
      $profile[$indexFile]['linkedInLink'] =$linkedIn->TxtGetLinkedInLink($tokenArray); 
+     $profile[$indexFile]['firstName'] = $linkedIn->TxtGetFirstName($tokenArray) ; 
+     if (isset($profile[$indexFile]['firstName'] )){
+         $first = 'TRUE';
+     }
+     $profile[$indexFile]['lastName'] = $linkedIn->TxtGetLastName($tokenArray) ; 
      $profile[$indexFile]['email'] = $linkedIn->TxtGetEmail($tokenArray); 
      $profile[$indexFile]['allContactsInfo'] = []; //array
      $profile[$indexFile]['topSkills'] = []; //array
@@ -40,6 +44,7 @@ foreach ($files as $indexFile => $file) {
      $profile[$indexFile]['education'] = []; //array
      $profile[$indexFile]['headline'] = ''; 
      $profile[$indexFile]['location'] = ''; 
+     $profile[$indexFile]['display_url'] = ''; 
      
      #echo $txtFull.PHP_EOL; 
 }
