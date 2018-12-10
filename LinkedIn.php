@@ -88,7 +88,7 @@ class LinkedIn {
         
     }
     function TxtGetLinkedInLink($tokenArray){
-        $result ='';      
+        #$result ='';      
         $resultArray=[];
         $keywords_af =['﻿(LINKEDIN)'];
         $keywords_bf =['﻿﻿CONTACT'];
@@ -131,6 +131,28 @@ class LinkedIn {
         
     }
     
+    function txtGetTopSkills($tokenArray){
+       $topSkillsArray =[[]];
+       $keywords_bf =['﻿TOP SKILLS'];
+       $keywords_af =['﻿LANGUAGES'];
+        foreach ($tokenArray as $key => $row) {
+           if ($this->stringCompare($keywords_af[0], $tokenArray[$key])> 80 || $this->stringCompare($this->TxtGetFirstName($tokenArray),$row)>80 )  { 
+               #echo 'skills after: '.PHP_EOL;
+               $index = $key - 1;
+               while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80) {
+                    echo 'skills before'.PHP_EOL;
+                   $topSkillsArray[]=$tokenArray[$index];
+                   $index--;
+               }
+           }
+              #
+                  
+              
+        }
+        
+       return  array_reverse($topSkillsArray);
+    }
+    
     function txtGetAllContacts($tokenArray){
        # if (isset($this->TxtGetLinkedInLink($tokenArray))){
          if ($this->TxtGetLinkedInLink($tokenArray)){
@@ -155,7 +177,7 @@ class LinkedIn {
         foreach ($tokenArray as $key => $row) {
               if (strpos($row,  '(COMPANY)')!==false ){
              #if (substr($row,-18)==  $keywords_wt[0]) {
-                  echo 'if (strpos($row,  $keywords_wt[0])!==false'.PHP_EOL;
+                  #echo 'if (strpos($row,  $keywords_wt[0])!==false'.PHP_EOL;
                     if (strpos($row,  '.')!==false  ){
                         if (strpos($row, $keywords_wt[1])!==false  ){
                             $tokenArray = explode(' ', $row);
