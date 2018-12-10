@@ -63,7 +63,7 @@ class LinkedIn {
             $words = explode(' ', $row);
              if (count($words)>1) {
                  
-                  if ( strpos($this->TxtGetLinkedInLink($tokenArray),$words[1]) !== FALSE  && strlen($words[1] > 3)){
+                  if ( (strpos($this->TxtGetLinkedInLink($tokenArray),$words[1]) !== FALSE && strlen($words[1]) > 3)){
                       # if (strlen($words[1] > 3)){
                             return $words[1] ;
                        #}
@@ -72,7 +72,7 @@ class LinkedIn {
              
              }
              else {
-                 print_r($words[1]);
+                
              }
             #echo $this->TxtGetLinkedInLink($tokenArray).' '.
           
@@ -131,6 +131,66 @@ class LinkedIn {
         
     }
     
+    function txtGetAllContacts($tokenArray){
+       # if (isset($this->TxtGetLinkedInLink($tokenArray))){
+         if ($this->TxtGetLinkedInLink($tokenArray)){
+            $contactsArray['linkedin']=$this->TxtGetLinkedInLink($tokenArray);
+        }
+        if ($this->TxtGetEmail($tokenArray)){
+            $contactsArray['email']=$this->TxtGetEmail($tokenArray);
+        }
+        if ($this->txtGetCompanyContact($tokenArray)){
+            $contactsArray['company']=$this->txtGetCompanyContact($tokenArray);
+        }
+        if ($this->txtGetPersonalContact($tokenArray)){
+            $contactsArray['personal']=$this->txtGetPersonalContact($tokenArray);
+        }
+        
+        return $contactsArray;
+    }
+    
+    function txtGetCompanyContact($tokenArray){
+        $keywords_wt =['﻿(COMPANY)','WWW'];
+       
+        foreach ($tokenArray as $key => $row) {
+              if (strpos($row,  '(COMPANY)')!==false ){
+             #if (substr($row,-18)==  $keywords_wt[0]) {
+                  echo 'if (strpos($row,  $keywords_wt[0])!==false'.PHP_EOL;
+                    if (strpos($row,  '.')!==false  ){
+                        if (strpos($row, $keywords_wt[1])!==false  ){
+                            $tokenArray = explode(' ', $row);
+                            if (isset($tokenArray[0])){
+                                return $tokenArray[0];
+                            }
+                        }
+                    }
+              }
+              #else echo $row.'<>'.$keywords_wt[0].PHP_EOL;
+        }
+    }
+    function txtGetPersonalContact($tokenArray){
+        $keywords_wt =['﻿(PERSONAL)','WWW'];
+       
+        foreach ($tokenArray as $key => $row) {
+              if (strpos($row ,  '(PERSONAL)')!==false ){
+             #if (substr($row,-18)==  $keywords_wt[0]) {
+               #   echo 'if (strpos($row,  $keywords_wt[0])!==false'.PHP_EOL;
+                    if (strpos($tokenArray[$key - 1],  '.')!==false  ){
+                        if (strpos($tokenArray[$key - 1] , $keywords_wt[1])!==false  ){
+                            #$tokenArray = explode(' ', $row);
+                            #if (isset($tokenArray[0])){
+                             #   return $tokenArray[0];
+                            #}
+                           # else {
+                            return $tokenArray[$key - 1] ;
+                           # }
+                        }
+                    }
+              }
+              #else echo $row.'<>'.$keywords_wt[0].PHP_EOL;
+        }
+    }
+    
     function getArrayTokensBetween ($tokenArray,$token_bf, $token_af){
          foreach ($tokenArray as $key => $row) {
              
@@ -160,7 +220,7 @@ class LinkedIn {
          return $tokenArray;
     }
     
-     function stringCompare($string1, $string2) {
+    function stringCompare($string1, $string2) {
         $percentage = 0;
         // similar_text(mb_strtolower($string1,'UTF-8'), mb_strtolower($string2,'UTF-8'), $percentage); 
         similar_text($string1, $string2, $percentage);

@@ -32,12 +32,9 @@ foreach ($files as $indexFile => $file) {
     
      $profile[$indexFile]['linkedInLink'] =$linkedIn->TxtGetLinkedInLink($tokenArray); 
      $profile[$indexFile]['firstName'] = $linkedIn->TxtGetFirstName($tokenArray) ; 
-     if (isset($profile[$indexFile]['firstName'] )){
-         $first = 'TRUE';
-     }
      $profile[$indexFile]['lastName'] = $linkedIn->TxtGetLastName($tokenArray) ; 
      $profile[$indexFile]['email'] = $linkedIn->TxtGetEmail($tokenArray); 
-     $profile[$indexFile]['allContactsInfo'] = []; //array
+     $profile[$indexFile]['allContactsInfo'] = $linkedIn->txtGetAllContacts($tokenArray); //array
      $profile[$indexFile]['topSkills'] = []; //array
      $profile[$indexFile]['languages'] = []; //array
      $profile[$indexFile]['experience'] = []; //array
