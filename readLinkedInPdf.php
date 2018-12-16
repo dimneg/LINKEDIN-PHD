@@ -11,7 +11,8 @@ $inputPath = "profiles\linkedIn/txt/";
 $sourcePath = "profiles/twitter/janag.json";
 
 $sourceProfile = file_get_contents($sourcePath);
-twitter::getProfileDataFromJson($sourceProfile );
+$profileToMatch = twitter::getProfileDataFromJson($sourceProfile);
+echo 'matching '.$profileToMatch['name'].PHP_EOL;
 
 $files = array_values(array_diff(scandir($inputPath), array('..', '.')));
 echo 'files=' . count($files) . PHP_EOL;
@@ -29,7 +30,7 @@ foreach ($files as $indexFile => $file) {
      #$txtFull = $segmenting1->fixEarlyCollatedTokensInTxt($fullDocx);
 #     $tokenArray = $linkedIn->PDFcreateTokenArray($docText);
      $tokenArray = $linkedIn->readCsv($inputPath, $file) ;
-     print_r($tokenArray);
+    # print_r($tokenArray);
      
      #print_r($txtFull);
      $profile[$indexFile]['index'] = $indexFile ; 
@@ -51,7 +52,21 @@ foreach ($files as $indexFile => $file) {
      #echo $txtFull.PHP_EOL; 
 }
 $json=json_encode( $profile,JSON_UNESCAPED_UNICODE);
-print_r($json);
+
+#print_r($json);
+
+foreach ($profile as $key => $linkedInProfile) {
+    #print_r($linkedInProfile);
+    if (in_array(str_replace('WWW.','',$profileToMatch['url']),  str_replace('WWW.','',$linkedInProfile['allContactsInfo']) )) {
+        echo $linkedInProfile['linkedInLink'].' matched'.PHP_EOL;
+    }
+    else {
+        echo $profileToMatch['url'].' no match ';
+        print_r($linkedInProfile['allContactsInfo']).PHP_EOL;
+    }
+   
+}
+
 #saveCsv($profile, 'profiles.csv');
 function saveCsv($tableName,$fileName){
         $fp = fopen($fileName, 'w');

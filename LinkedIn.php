@@ -137,10 +137,10 @@ class LinkedIn {
        $keywords_af =['﻿PUBLICATIONS'];
         foreach ($tokenArray as $key => $row) {
            if ($this->stringCompare($keywords_af[0], $tokenArray[$key])> 80  )  { 
-               echo 'languages after: '.PHP_EOL;
+              # echo 'languages after: '.PHP_EOL;
                $index = $key - 1;
                while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80) {
-                    echo 'anguages before'.PHP_EOL;
+                    #echo 'anguages before'.PHP_EOL;
                     if (!empty($tokenArray[$index]) && $tokenArray[$index]!='' && $tokenArray[$index]!=[]){
                          $languagesArray[]=$tokenArray[$index];
                     }
