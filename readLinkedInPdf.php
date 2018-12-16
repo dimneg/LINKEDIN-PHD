@@ -3,10 +3,15 @@
 include 'C:\Users\dimitris negkas\Documents\repos\gemh_mining\DocxToTxt.php';
 include 'C:\Users\dimitris negkas\Documents\repos\gemh_mining\textMining.php';
 include 'LinkedIn.php';
+include 'twitter.php';
 include 'DocxConversion.php';
 
 $inputPath = "profiles\linkedIn/txt/";
 
+$sourcePath = "profiles/twitter/janag.json";
+
+$sourceProfile = file_get_contents($sourcePath);
+twitter::getProfileDataFromJson($sourceProfile );
 
 $files = array_values(array_diff(scandir($inputPath), array('..', '.')));
 echo 'files=' . count($files) . PHP_EOL;
@@ -36,7 +41,7 @@ foreach ($files as $indexFile => $file) {
      $profile[$indexFile]['email'] = $linkedIn->TxtGetEmail($tokenArray); 
      $profile[$indexFile]['allContactsInfo'] = $linkedIn->txtGetAllContacts($tokenArray); //array
      $profile[$indexFile]['topSkills'] = $linkedIn->txtGetTopSkills($tokenArray);
-     $profile[$indexFile]['languages'] = []; //array
+     $profile[$indexFile]['languages'] = $linkedIn->txtGetLanguages($tokenArray);
      $profile[$indexFile]['experience'] = []; //array
      $profile[$indexFile]['education'] = []; //array
      $profile[$indexFile]['headline'] = ''; 

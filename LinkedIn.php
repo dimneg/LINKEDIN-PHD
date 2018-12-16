@@ -131,6 +131,33 @@ class LinkedIn {
         
     }
     
+    function txtGetLanguages($tokenArray){
+       $languagesArray =[[]];
+       $keywords_bf =['﻿LANGUAGES'];
+       $keywords_af =['﻿PUBLICATIONS'];
+        foreach ($tokenArray as $key => $row) {
+           if ($this->stringCompare($keywords_af[0], $tokenArray[$key])> 80  )  { 
+               echo 'languages after: '.PHP_EOL;
+               $index = $key - 1;
+               while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80) {
+                    echo 'anguages before'.PHP_EOL;
+                    if (!empty($tokenArray[$index]) && $tokenArray[$index]!='' && $tokenArray[$index]!=[]){
+                         $languagesArray[]=$tokenArray[$index];
+                    }
+                  
+                   $index--;
+               }
+           }
+           else {
+               #return [];
+           }
+              #
+                  
+              
+        }
+        
+       return  array_reverse( $languagesArray);
+    }
     function txtGetTopSkills($tokenArray){
        $topSkillsArray =[[]];
        $keywords_bf =['﻿TOP SKILLS'];
@@ -140,8 +167,11 @@ class LinkedIn {
                #echo 'skills after: '.PHP_EOL;
                $index = $key - 1;
                while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80) {
-                    echo 'skills before'.PHP_EOL;
-                   $topSkillsArray[]=$tokenArray[$index];
+                   # echo 'skills before'.PHP_EOL;
+                    if (!empty($tokenArray[$index]) && $tokenArray[$index]!='' && $tokenArray[$index]!=[]){
+                         $topSkillsArray[]=$tokenArray[$index];
+                    }
+                  
                    $index--;
                }
            }
