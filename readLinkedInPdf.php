@@ -6,9 +6,11 @@ include 'LinkedIn.php';
 include 'twitter.php';
 include 'DocxConversion.php';
 
-$inputPath = "profiles\linkedIn/txt/";
+#$inputPath = "profiles\linkedIn/txt/ioannis-anagnostopoulos/";
+$inputPath = "profiles\linkedIn/txt/john-raptis/";
 
-$sourcePath = "profiles/twitter/janag.json";
+#$sourcePath = "profiles/twitter/janag.json";
+$sourcePath = "profiles/twitter/raptis.json";
 
 $sourceProfile = file_get_contents($sourcePath);
 $profileToMatch = twitter::getProfileDataFromJson($sourceProfile);
@@ -36,7 +38,7 @@ foreach ($files as $indexFile => $file) {
      $profile[$indexFile]['index'] = $indexFile ; 
      $profile[$indexFile]['fileName'] = $file ; 
     
-     $profile[$indexFile]['linkedInLink'] =$linkedIn->TxtGetLinkedInLink($tokenArray); 
+     $profile[$indexFile]['linkedInLink'] =$linkedIn->TxtGetLinkedInLink($tokenArray,1); 
      $profile[$indexFile]['firstName'] = $linkedIn->TxtGetFirstName($tokenArray) ; 
      $profile[$indexFile]['lastName'] = $linkedIn->TxtGetLastName($tokenArray) ; 
      $profile[$indexFile]['email'] = $linkedIn->TxtGetEmail($tokenArray); 
@@ -53,7 +55,7 @@ foreach ($files as $indexFile => $file) {
 }
 $json=json_encode( $profile,JSON_UNESCAPED_UNICODE);
 
-#print_r($json);
+print_r($json);
 
 foreach ($profile as $key => $linkedInProfile) {
     #print_r($linkedInProfile);

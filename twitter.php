@@ -17,7 +17,8 @@ class twitter {
         $json = json_decode($jsonProfile,true);
         if(isset ($json['name'])) {
            $profile['name'] = mb_strtoupper($json['name'], 'UTF-8');
-           $profile['url'] =  mb_strtoupper($json['entities']['url']['urls'][0]['display_url'], 'UTF-8');
+           $profile['url'] =   isset($json['entities']['url']['urls'][0]['display_url'])? mb_strtoupper($json['entities']['url']['urls'][0]['display_url'], 'UTF-8') : null;
+           // isset($gemhData[2])? $gemhData[2] : null;
         }
         #print_r($profile);
         return $profile;

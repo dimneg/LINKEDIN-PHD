@@ -40,7 +40,7 @@ class LinkedIn {
         foreach ($tokenArray as $key => $row) {
             $words = explode(' ', $row);
             #echo $this->TxtGetLinkedInLink($tokenArray).' '.
-           if ((strpos($this->TxtGetLinkedInLink($tokenArray),$row) !== FALSE ||  strpos($this->TxtGetLinkedInLink($tokenArray),$words[0]) !== FALSE ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
+           if ((strpos($this->TxtGetLinkedInLink($tokenArray,0),$row) !== FALSE ||  strpos($this->TxtGetLinkedInLink($tokenArray,0),$words[0]) !== FALSE ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
                if (count($words)>1) {
                    return $words[0] ;
                }
@@ -63,7 +63,7 @@ class LinkedIn {
             $words = explode(' ', $row);
              if (count($words)>1) {
                  
-                  if ( (strpos($this->TxtGetLinkedInLink($tokenArray),$words[1]) !== FALSE && strlen($words[1]) > 3)){
+                  if ( (strpos($this->TxtGetLinkedInLink($tokenArray,0),$words[1]) !== FALSE && strlen($words[1]) > 3)){
                       # if (strlen($words[1] > 3)){
                             return $words[1] ;
                        #}
@@ -80,15 +80,19 @@ class LinkedIn {
            }
            else {
                 
-                  if ((strpos($this->TxtGetLinkedInLink($tokenArray),$row) !== FALSE  ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
+                  if ((strpos($this->TxtGetLinkedInLink($tokenArray,0),$row) !== FALSE  ) && strpos($row,'LINKED') === FALSE  && strpos($row,'-') === FALSE  && strpos($row,'SKILLS') === FALSE ){
                       return $tokenArray[$key + 1];
                   }
            }
         }
         
     }
-    function TxtGetLinkedInLink($tokenArray){
-        #$result ='';      
+    function TxtGetLinkedInLink($tokenArray,$usage){
+        #$result ='';    
+        if ($usage ==1){
+            echo 'getting link'.PHP_EOL;
+        }
+        
         $resultArray=[];
         $keywords_af =['﻿(LINKEDIN)'];
         $keywords_bf =['﻿﻿CONTACT'];
@@ -96,8 +100,20 @@ class LinkedIn {
         foreach ($tokenArray as $key => $row) {
              #if ($tokenArray[$key]==  $keywords_af[0]) {
              if ($this->stringCompare($keywords_af[0], $tokenArray[$key])> 80)  { 
-                 #echo 'found'.$tokenArray[$key].PHP_EOL;
-                 $index = $key - 1;
+                 if ($usage ==1){
+                       echo 'string compare'. $keywords_af[0].' '.$tokenArray[$key].$this->stringCompare($keywords_af[0], $tokenArray[$key]).PHP_EOL;
+                 }
+              
+                 if ($this->stringCompare($keywords_af[0], $tokenArray[$key]) < 60){
+                               $index = $key ;
+                                if ($usage ==1){
+                                      # echo 'case that '.$keywords_af[0] .' is on same line 1'.PHP_EOL;
+                                }
+                               
+                          }
+                          else {
+                               $index = $key - 1;
+                          }
               #   while ( strpos($tokenArray[$index],  $keywords_bf[0]) === 'false' )  {   
                   while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80 && $this->isEmail($tokenArray[$index]) === FALSE )  {               
 #while ($this->isEmail($tokenArray[$key])===FALSE ||( strpos($tokenArray[$index],  $keywords_bf[0]) ===FALSE ) ) {
@@ -107,9 +123,41 @@ class LinkedIn {
                       $index-- ;
                  }
                  #$result = str_replace('www.linkedin.com/in/','',$result );
-                 return implode("", array_reverse($resultArray));
+                 return str_replace('(LINKEDIN)','',implode("", array_reverse($resultArray))); 
              }
              else {
+                 #echo "checking : strpos(".$row.",".$keywords_af[0].") ";
+                  if (strpos($row,'(LINKEDIN)') !== false  ) {
+                
+                       if ($usage == 1){
+                             #echo 'strpos'.$row.' '. $keywords_af[0].PHP_EOL;
+                        }
+                       #echo 'strpos'.$row.' '. $keywords_af[0].PHP_EOL;
+                       if ($this->stringCompare($keywords_af[0], $tokenArray[$key]) < 60){
+                               $index = $key ;
+                               if ($usage ==1){
+                                    #echo 'case that '.$keywords_af[0] .' is on same line 2'.PHP_EOL;
+                               }
+                                
+                          }
+                          else {
+                               $index = $key - 1;
+                          }
+                      
+                      # $index = $key - 1;
+                        while ( $this->stringCompare($keywords_bf[0], $tokenArray[$index])< 80 && $this->isEmail($tokenArray[$index]) === FALSE )  {       
+                            $resultArray []= $tokenArray[$index];
+                             $index-- ;
+                        }
+                        return str_replace('(LINKEDIN)','',implode("", array_reverse($resultArray))); 
+                  }
+                  else {
+                       if ($usage == 1){
+                           
+                           #echo $row.' strpos '.$keywords_af[0]. 'methods failed '.strpos($row,$keywords_af[0]). PHP_EOL;
+                       }
+                      
+                  }
                 # echo $tokenArray[$key].' '.$keywords_af[0].' '.  $this->stringCompare(preg_replace('/\s+/', '', $tokenArray[$key]),  preg_replace('/\s+/', '', $keywords_af[0])).PHP_EOL;
              }
             #$result = str_replace('www.linkedin.com/in/','',$tokenArray[1].$tokenArray[2]);
@@ -184,9 +232,10 @@ class LinkedIn {
     }
     
     function txtGetAllContacts($tokenArray){
+        $contactsArray= [[]];
        # if (isset($this->TxtGetLinkedInLink($tokenArray))){
-         if ($this->TxtGetLinkedInLink($tokenArray)){
-            $contactsArray['linkedin']=$this->TxtGetLinkedInLink($tokenArray);
+         if ($this->TxtGetLinkedInLink($tokenArray,0)){
+            $contactsArray['linkedin']=$this->TxtGetLinkedInLink($tokenArray,0);
         }
         if ($this->TxtGetEmail($tokenArray)){
             $contactsArray['email']=$this->TxtGetEmail($tokenArray);
