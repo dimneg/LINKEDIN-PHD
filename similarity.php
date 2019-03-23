@@ -13,6 +13,11 @@
  */
 class similarity {
     //put your code here
+    
+   # Levenshtein distance 
+   public static function Levenshtein($string1,$string2){
+        return levenshtein($string1,$string2);
+    } 
 }
 //editD: The edit distance value between two strings,
 //editDNew: The new edit distance value affected by the length of strings,

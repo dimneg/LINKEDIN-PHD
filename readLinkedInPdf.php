@@ -5,6 +5,7 @@ include 'C:\Users\dimitris negkas\Documents\repos\gemh_mining\textMining.php';
 include 'LinkedIn.php';
 include 'twitter.php';
 include 'DocxConversion.php';
+include 'similarity.php';
 
 #$inputPath = "profiles\linkedIn/txt/ioannis-anagnostopoulos/";
 $inputPath = "profiles\linkedIn/txt/john-raptis/";
@@ -50,6 +51,8 @@ foreach ($files as $indexFile => $file) {
      $profile[$indexFile]['headline'] = ''; 
      $profile[$indexFile]['location'] = ''; 
      $profile[$indexFile]['display_url'] = ''; 
+     
+     $profile [$indexFile] ['nameSimilarityLevenshtein']=similarity::Levenshtein($profile[$indexFile]['firstName'].' '.$profile[$indexFile]['lastName'] , $profileToMatch['name']);
      
      #echo $txtFull.PHP_EOL; 
 }
